@@ -6,29 +6,101 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
-.colab-card {
-  background: #ffffff;
-  border-radius: 12px;
-  padding: 18px;
-  box-shadow: 0 4px 10px rgba(0,0,0,.08);
+body{
+  margin:0;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background:#f4ecdf;
+  color:#3d2b1f;
 }
 
-.btn-ver {
-  display: block;
-  margin-top: 16px;
-  padding: 14px;
-  background: #c65a1e;
-  color: #fff;
-  text-align: center;
-  border-radius: 8px;
-  font-weight: bold;
-  text-decoration: none;
+/* HEADER */
+.header{
+  background: linear-gradient(90deg, #3d2b1f, #5b3a29);
+  color:#fff;
+  padding:20px;
 }
 
-.btn-ver:hover {
-  background: #a74c1a;
+.header h1{
+  margin:0;
+  font-size:22px;
+}
+
+.header p{
+  margin:6px 0 0;
+  opacity:.9;
+}
+
+/* CONTAINER */
+.container{
+  max-width:1300px;
+  margin:25px auto;
+  padding:0 15px;
+}
+
+/* FILTROS */
+.filters{
+  background:#ffffff;
+  border-radius:12px;
+  padding:15px;
+  display:grid;
+  grid-template-columns:1fr 200px 240px;
+  gap:12px;
+  box-shadow:0 3px 10px rgba(0,0,0,.08);
+  margin-bottom:30px;
+}
+
+.filters input,
+.filters select{
+  padding:10px;
+  border-radius:6px;
+  border:1px solid #ccc;
+  font-size:14px;
+}
+
+/* GRID DOS CARDS */
+.cards{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+  gap:20px;
+}
+
+/* CARD DO COLABORADOR */
+.card.colab-card{
+  background:#fff;
+  border-radius:12px;
+  padding:18px;
+  box-shadow:0 4px 12px rgba(0,0,0,.1);
+}
+
+.colab-card h3{
+  margin:0 0 10px;
+  font-size:16px;
+}
+
+.colab-card p{
+  margin:4px 0;
+  font-size:14px;
+}
+
+/* BOTÃO LARANJA */
+.btn-ver{
+  margin-top:16px;
+  display:block;
+  padding:14px;
+  background:#c65a1e;
+  color:#fff;
+  text-align:center;
+  border-radius:8px;
+  text-decoration:none;
+  font-weight:600;
+  transition:.2s;
+}
+
+.btn-ver:hover{
+  background:#a74c1a;
 }
 </style>
+
 </head>
 
 <body>
@@ -62,13 +134,12 @@ const areaSelect = document.getElementById('selectArea');
 const coordSelect = document.getElementById('selectCoord');
 const cards = document.querySelectorAll('.colab-card');
 
-// Preencher selects automaticamente
 const areas = new Set();
 const coords = new Set();
 
 cards.forEach(card => {
-  if (card.dataset.area) areas.add(card.dataset.area);
-  if (card.dataset.coordenador) coords.add(card.dataset.coordenador);
+  areas.add(card.dataset.area);
+  coords.add(card.dataset.coordenador);
 });
 
 areas.forEach(area => {
@@ -79,18 +150,18 @@ coords.forEach(coord => {
   coordSelect.innerHTML += `<option value="${coord}">${coord}</option>`;
 });
 
-function filtrar() {
+function filtrar(){
   const nome = nomeInput.value.toLowerCase();
-  const area = areaSelect.value;
-  const coord = coordSelect.value;
+  const area = areaSelect.value.toLowerCase();
+  const coord = coordSelect.value.toLowerCase();
 
   cards.forEach(card => {
-    const mostrar =
+    const ok =
       card.dataset.nome.includes(nome) &&
       (area === '' || card.dataset.area === area) &&
       (coord === '' || card.dataset.coordenador === coord);
 
-    card.style.display = mostrar ? 'block' : 'none';
+    card.style.display = ok ? 'block' : 'none';
   });
 }
 
