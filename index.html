@@ -12,7 +12,20 @@ body{
   background:#f4ecdf;
   color:#3d2b1f;
 }
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  margin-top: 30px;
+}
 
+.colab-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 18px;
+  box-shadow: 0 4px 10px rgba(0,0,0,.08);
+  display: block; /* Importante para o filtro */
+}
 /* HEADER */
 .header{
   background: linear-gradient(90deg, #3d2b1f, #5b3a29);
@@ -129,45 +142,63 @@ body{
 </div>
 
 <script>
-const nomeInput = document.getElementById('filtroNome');
-const areaSelect = document.getElementById('selectArea');
-const coordSelect = document.getElementById('selectCoord');
-const cards = document.querySelectorAll('.colab-card');
-
-const areas = new Set();
-const coords = new Set();
-
-cards.forEach(card => {
-  areas.add(card.dataset.area);
-  coords.add(card.dataset.coordenador);
-});
-
-areas.forEach(area => {
-  areaSelect.innerHTML += `<option value="${area}">${area}</option>`;
-});
-
-coords.forEach(coord => {
-  coordSelect.innerHTML += `<option value="${coord}">${coord}</option>`;
-});
-
-function filtrar(){
-  const nome = nomeInput.value.toLowerCase();
-  const area = areaSelect.value.toLowerCase();
-  const coord = coordSelect.value.toLowerCase();
-
+function inicializarFiltros() {
+  const nomeInput = document.getElementById('filtroNome');
+  const areaSelect = document.getElementById('selectArea');
+  const coordSelect = document.getElementById('selectCoord');
+  const cards = document.querySelectorAll('.colab-card');
+  
+  // Limpar options existentes (exceto a primeira)
+  while(areaSelect.options.length > 1) areaSelect.remove(1);
+  while(coordSelect.options.length > 1) coordSelect.remove(1);
+  
+  // Popular filtros
+  const areas = new Set();
+  const coords = new Set();
+  
   cards.forEach(card => {
-    const ok =
-      card.dataset.nome.includes(nome) &&
-      (area === '' || card.dataset.area === area) &&
-      (coord === '' || card.dataset.coordenador === coord);
-
-    card.style.display = ok ? 'block' : 'none';
+    if(card.dataset.area) areas.add(card.dataset.area);
+    if(card.dataset.coordenador) coords.add(card.dataset.coordenador);
   });
+  
+  [...areas].sort().forEach(area => {
+    areaSelect.innerHTML += `<option value="${area}">${area}</option>`;
+  });
+  
+  [...coords].sort().forEach(coord => {
+    coordSelect.innerHTML += `<option value="${coord}">${coord}</option>`;
+  });
+  
+  // Função de filtro
+  function filtrar() {
+    const nome = nomeInput.value.toLowerCase();
+    const area = areaSelect.value;
+    const coord = coordSelect.value;
+    
+    cards.forEach(card => {
+      const mostrar =
+        card.dataset.nome.includes(nome) &&
+        (area === '' || card.dataset.area === area) &&
+        (coord === '' || card.dataset.coordenador === coord);
+      
+      card.style.display = mostrar ? 'block' : 'none';
+    });
+  }
+  
+  nomeInput.addEventListener('input', filtrar);
+  areaSelect.addEventListener('change', filtrar);
+  coordSelect.addEventListener('change', filtrar);
+  
+  // Executar filtro inicial
+  filtrar();
 }
 
-nomeInput.addEventListener('input', filtrar);
-areaSelect.addEventListener('change', filtrar);
-coordSelect.addEventListener('change', filtrar);
+// Aguardar o DOM carregar completamente
+if(document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', inicializarFiltros);
+} else {
+  inicializarFiltros();
+}
 </script>
 
 
