@@ -6,27 +6,27 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
-.colab-card{
-  background:#ffffff;
-  border-radius:12px;
-  padding:18px;
-  box-shadow:0 4px 10px rgba(0,0,0,.08);
+.colab-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 18px;
+  box-shadow: 0 4px 10px rgba(0,0,0,.08);
 }
 
-.btn-ver{
-  display:block;
-  margin-top:16px;
-  padding:14px;
-  background:#c65a1e;
-  color:white;
-  text-align:center;
-  border-radius:8px;
-  font-weight:600;
-  text-decoration:none;
+.btn-ver {
+  display: block;
+  margin-top: 16px;
+  padding: 14px;
+  background: #c65a1e;
+  color: #fff;
+  text-align: center;
+  border-radius: 8px;
+  font-weight: bold;
+  text-decoration: none;
 }
 
-.btn-ver:hover{
-  background:#a74c1a;
+.btn-ver:hover {
+  background: #a74c1a;
 }
 </style>
 </head>
@@ -62,20 +62,20 @@ const areaSelect = document.getElementById('selectArea');
 const coordSelect = document.getElementById('selectCoord');
 const cards = document.querySelectorAll('.colab-card');
 
-// popular filtros
+// Preencher selects automaticamente
 const areas = new Set();
 const coords = new Set();
 
 cards.forEach(card => {
-  areas.add(card.dataset.area);
-  coords.add(card.dataset.coordenador);
+  if (card.dataset.area) areas.add(card.dataset.area);
+  if (card.dataset.coordenador) coords.add(card.dataset.coordenador);
 });
 
-[...areas].sort().forEach(area => {
+areas.forEach(area => {
   areaSelect.innerHTML += `<option value="${area}">${area}</option>`;
 });
 
-[...coords].sort().forEach(coord => {
+coords.forEach(coord => {
   coordSelect.innerHTML += `<option value="${coord}">${coord}</option>`;
 });
 
@@ -98,6 +98,7 @@ nomeInput.addEventListener('input', filtrar);
 areaSelect.addEventListener('change', filtrar);
 coordSelect.addEventListener('change', filtrar);
 </script>
+
 
 </body>
 </html>
