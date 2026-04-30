@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>LUCAS SILVA</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body{
+  margin:0;
+  font-family: Arial, sans-serif;
+  background:#f5efe6;
+}
+
+/* Header */
+.header{
+  background:linear-gradient(90deg,#2b1d13,#4a3021);
+  color:white;
+  padding:20px;
+}
+.header h1{
+  margin:0;
+}
+.header a{
+  color:#ffd6a8;
+  text-decoration:none;
+  font-size:14px;
+}
+
+/* Container */
+.container{
+  max-width:1100px;
+  margin:20px auto;
+  padding:0 15px;
+}
+
+/* Card info */
+.card-info{
+  background:white;
+  border-radius:10px;
+  padding:20px;
+  display:grid;
+  grid-template-columns: repeat(auto-fit,minmax(200px,1fr));
+  gap:15px;
+  margin-bottom:25px;
+}
+.card-info div span{
+  font-size:12px;
+  color:#6b7280;
+}
+.card-info div strong{
+  display:block;
+}
+
+/* Section */
+.section{
+  background:white;
+  border-radius:10px;
+  margin-bottom:30px;
+}
+.section h2{
+  margin:0;
+  padding:15px;
+  border-bottom:2px solid #eee;
+}
+
+/* Table */
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+thead{
+  background:#3b2a1d;
+  color:white;
+}
+th,td{
+  padding:10px;
+  font-size:14px;
+  text-align:left;
+}
+tbody tr:nth-child(even){
+  background:#faf6f1;
+}
+
+/* Status badges */
+.badge{
+  padding:4px 8px;
+  border-radius:12px;
+  font-size:12px;
+  font-weight:bold;
+}
+.ok{
+  background:#dcfce7;
+  color:#166534;
+}
+.vencido{
+  background:#fee2e2;
+  color:#991b1b;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  <h1>Treinamentos · Colaborador</h1>
+  <a href="../index.html">Voltar à lista</a>
+</div>
+
+<div class="container">
+
+  <div class="card-info">
+    <div>
+      <span>Nome</span>
+      <strong>LUCAS SILVA</strong>
+    </div>
+    <div>
+      <span>Cargo</span>
+      <strong>TECNICO ELETRONICO II</strong>
+    </div>
+    <div>
+      <span>Área</span>
+      <strong>MANUTENÇÃO</strong>
+    </div>
+    <div>
+      <span>Coordenador</span>
+      <strong>HENRIQUE MARTINS CARDOSO</strong>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Treinamentos Normativos</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Treinamento</th>
+          <th>Treinado em</th>
+          <th>Vence em</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+<tr><td>NR 23 - BRIGADA DE EMERGENCIA</td><td>29/08/2025</td><td>29/08/2027</td><td><span class=\"badge ok\">NO PRAZO</span></td></tr><tr><td>USO DE ESCADAS</td><td>03/01/2023</td><td>03/01/2024</td><td><span class=\"badge vencido\">VENCIDO</span></td></tr><tr><td>NR 10 - BAIXA E MEDIA TENSAO</td><td>18/12/2025</td><td>18/12/2027</td><td><span class=\"badge ok\">NO PRAZO</span></td></tr><tr><td>NR 10 - SISTEMA ELETRICO DE POTENCIA</td><td>06/11/2024</td><td>06/11/2026</td><td><span class=\"badge ok\">NO PRAZO</span></td></tr><tr><td>NR 12 - OP. MAQ. E EQUIP.</td><td>15/12/2021</td><td>24/08/2035</td><td><span class=\"badge ok\">NO PRAZO</span></td></tr><tr><td>NR 20 SEGURANÇA E SAUDE NO TRABALHO COM INFLAMAVEIS E COMBUSTIVEIS</td><td>25/11/2024</td><td>25/11/2025</td><td><span class=\"badge vencido\">VENCIDO</span></td></tr><tr><td>NR 33 - ESPAÇO CONFINADO - EXECUTANTE/VIGIA</td><td>09/01/2025</td><td>09/01/2026</td><td><span class=\"badge vencido\">VENCIDO</span></td></tr><tr><td>NR 33 - ESPAÇO CONFINADO - RESGATISTA</td><td>04/11/2025</td><td>05/05/2026</td><td><span class=\"badge ok\">NO PRAZO</span></td></tr><tr><td>NR 33 - ESPAÇO CONFINADO - SUPERVISOR</td><td>11/10/2025</td><td>11/10/2026</td><td><span class=\"badge ok\">NO PRAZO</span></td></tr><tr><td>NR 34 - TRABALHO A QUENTE</td><td>05/05/2025</td><td>05/05/2026</td><td><span class=\"badge ok\">NO PRAZO</span></td></tr><tr><td>NR 35 - TRABALHO EM ALTURA</td><td>08/10/2025</td><td>08/10/2027</td><td><span class=\"badge ok\">NO PRAZO</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Treinamentos Obrigatórios</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Treinamento</th>
+          <th>Treinado em</th>
+          <th>Vence em</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+<tr><td>BOS / OFS</td><td>19/12/2024</td><td>19/12/2025</td><td><span class=\"badge vencido\">VENCIDO</span></td></tr><tr><td>CCC - CULTURA, CALIBRAÇÃO E CONSISTÊNCIA</td><td>19/12/2024</td><td>19/12/2025</td><td><span class=\"badge vencido\">VENCIDO</span></td></tr><tr><td>NR 06 EPI</td><td>19/12/2024</td><td>19/12/2025</td><td><span class=\"badge vencido\">VENCIDO</span></td></tr><tr><td>GESTÃO DE RESÍDUOS</td><td>19/12/2024</td><td>19/12/2025</td><td><span class=\"badge vencido\">VENCIDO</span></td></tr><tr><td>LAIA - POLITICA INTEGRADA - OBJ E METAS</td><td>19/12/2024</td><td>19/12/2025</td><td><span class=\"badge vencido\">VENCIDO</span></td></tr><tr><td>LOTOTO</td><td>19/12/2025</td><td>19/12/2026</td><td><span class=\"badge ok\">NO PRAZO</span></td></tr><tr><td>MANUSEIO DE PRODUTOS QUIMICOS</td><td>19/12/2024</td><td>19/12/2025</td><td><span class=\"badge vencido\">VENCIDO</span></td></tr><tr><td>PLANO DE ATENDIMENTO DE EMERGÊNCIAS</td><td>19/12/2024</td><td>19/12/2025</td><td><span class=\"badge vencido\">VENCIDO</span></td></tr><tr><td>PTW</td><td>19/12/2025</td><td>19/12/2026</td><td><span class=\"badge ok\">NO PRAZO</span></td></tr><tr><td>REPORTE DE INCIDENTES / POLITICA DE CONSEQUENCIAS</td><td>19/12/2024</td><td>19/12/2025</td><td><span class=\"badge vencido\">VENCIDO</span></td></tr><tr><td>WLMRA</td><td>19/12/2025</td><td>19/12/2026</td><td><span class=\"badge ok\">NO PRAZO</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+</body>
+</html>
