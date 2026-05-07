@@ -18,23 +18,58 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y wget unzip
       
-      - name: Download index.html from OneDrive
-        run: |
-          echo "Baixando index.html..."
-          # URL será adicionada depois
-          
-      - name: Download colaboradores folder
+      - name: Create folders structure
         run: |
           mkdir -p colaboradores
-          echo "Baixando arquivos da pasta colaboradores..."
           
-      - name: List downloaded files
+      - name: Download and extract main folder (Treinamentos-Colaboradores)
         run: |
-          echo "=== Arquivos baixados ==="
-          ls -la
-          echo "=== Pasta colaboradores ==="
-          ls -la colaboradores/ || echo "Pasta vazia"
+          MAIN_URL="https://onedrive.live.com/redir?cid=02771b00a9d8b045&resid=02771B00A9D8B045!s522699f0f72d4c47963557c8331fc2cb&ithint=folder&e=dBRBY9%3fdownload%3d1&migratedtospo=true&redeem=aHR0cHM6Ly8xZHJ2Lm1zL2YvYy8wMjc3MWIwMGE5ZDhiMDQ1L0lnRHdtU1pTTGZkSFRKWTFWOGd6SDhMTEFab2Y5ckRDcmNJbU80UEdTV2ZQNTQ0P2U9ZEJSQlk5P2Rvd25sb2FkPTE"
           
+          echo "Baixando pasta principal..."
+          wget --max-redirect=10 --no-check-certificate -O temp_main.zip "$MAIN_URL"
+          
+          if [ -f temp_main.zip ]; then
+            echo "Extraindo arquivos..."
+            unzip -o temp_main.zip -d ./
+            rm temp_main.zip
+          fi
+          
+          echo "Arquivos baixados:"
+          ls -la
+      
+      - name: Download and extract colaboradores subfolder
+        run: |
+          COLAB_URL="https://onedrive.live.com/redir?cid=02771b00a9d8b045&resid=02771B00A9D8B045!s0d36bc980d7048dfb64c69b75e1b81f9&ithint=folder&e=7hU0JK%3fdownload%3d1&migratedtospo=true&redeem=aHR0cHM6Ly8xZHJ2Lm1zL2YvYy8wMjc3MWIwMGE5ZDhiMDQ1L0lnQ1l2RFlOY0EzZlNMWk1hYmRlRzRINUFkaC0xdTFRM0Z5MHZoV0R2SVNQMjE0P2U9N2hVMEpLP2Rvd25sb2FkPTE"
+          
+          echo "Baixando pasta colaboradores..."
+          wget --max-redirect=10 --no-check-certificate -O temp_colab.zip "$COLAB_URL"
+          
+          if [ -f temp_colab.zip ]; then
+            echo "Extraindo arquivos da pasta colaboradores..."
+            unzip -o temp_colab.zip -d ./colaboradores/
+            rm temp_colab.zip
+          fi
+          
+          echo "Conteúdo da pasta colaboradores:"
+          ls -la colaboradores/
+      
+      - name: Ensure index.html is in root
+        run: |
+          # Se o index.html foi baixado dentro de uma subpasta, movê-lo para a raiz
+          if [ -f Treinamentos-Colaboradores/index.html ]; then
+            mv Treinamentos-Colaboradores/index.html ./
+          fi
+          
+          # Mover qualquer outro HTML que esteja fora da pasta colaboradores
+          find . -maxdepth 1 -name "*.html" ! -name "index.html" -exec mv {} ./ \; 2>/dev/null || echo "Nenhum HTML extra encontrado"
+          
+          echo "Estrutura final:"
+          echo "--- Arquivos na raiz ---"
+          ls -la *.html 2>/dev/null || echo "Nenhum HTML na raiz"
+          echo "--- Pasta colaboradores ---"
+          ls -la colaboradores/ 2>/dev/null || echo "Pasta vazia"
+      
       - name: Commit and push changes
         run: |
           git config --local user.email "action@github.com"
