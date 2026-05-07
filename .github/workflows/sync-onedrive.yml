@@ -1,0 +1,41 @@
+name: Sync from OneDrive
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'  # A cada 5 minutos
+  workflow_dispatch:  # Permite rodar manual
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Install rclone
+        run: |
+          curl https://rclone.org/install.sh | sudo bash
+          
+      - name: Configure rclone for OneDrive
+        run: |
+          mkdir -p ~/.config/rclone
+          cat > ~/.config/rclone/rclone.conf << EOF
+          [onedrive]
+          type = onedrive
+          client_id = ${{ secrets.ONEDRIVE_CLIENT_ID }}
+          client_secret = ${{ secrets.ONEDRIVE_CLIENT_SECRET }}
+          token = ${{ secrets.ONEDRIVE_TOKEN }}
+          EOF
+          
+      - name: Sync from OneDrive
+        run: |
+          rclone sync onedrive:/Treinamentos-Colaboradores ./ --progress
+          
+      - name: Commit and push
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git diff --quiet && git diff --staged --quiet || git commit -m "Auto-sync from OneDrive $(date '+%Y-%m-%d %H:%M:%S')"
+          git push
