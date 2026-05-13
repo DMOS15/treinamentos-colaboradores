@@ -8,7 +8,7 @@
 <style>
 body{
   margin:0;
-  font-family: Arial, sans-serif;
+  font-family: 'Segoe UI', Arial, sans-serif;
   background:#f5efe6;
 }
 
@@ -20,48 +20,69 @@ body{
 }
 .header h1{
   margin:0;
+  font-size:1.5rem;
 }
 .header a{
   color:#ffd6a8;
   text-decoration:none;
   font-size:14px;
 }
+.header a:hover{
+  text-decoration:underline;
+}
 
 /* Container */
 .container{
-  max-width:1100px;
+  max-width:1200px;
   margin:20px auto;
   padding:0 15px;
 }
 
-/* Card info */
+/* Card info - 4 colunas */
 .card-info{
   background:white;
-  border-radius:10px;
-  padding:20px;
+  border-radius:12px;
+  padding:20px 25px;
   display:grid;
-  grid-template-columns: repeat(auto-fit,minmax(200px,1fr));
-  gap:15px;
+  grid-template-columns: repeat(4, 1fr);
+  gap:20px;
   margin-bottom:25px;
+  box-shadow:0 2px 8px rgba(0,0,0,0.05);
 }
 .card-info div span{
   font-size:12px;
-  color:#6b7280;
+  color:#8b7355;
+  font-weight:600;
+  letter-spacing:0.5px;
 }
 .card-info div strong{
   display:block;
+  font-size:15px;
+  margin-top:5px;
+  color:#2b1d13;
 }
 
-/* Section */
+/* Sections */
 .section{
   background:white;
-  border-radius:10px;
+  border-radius:12px;
   margin-bottom:30px;
+  overflow:hidden;
+  box-shadow:0 2px 8px rgba(0,0,0,0.05);
 }
 .section h2{
   margin:0;
-  padding:15px;
-  border-bottom:2px solid #eee;
+  padding:15px 20px;
+  background:#f8f4ef;
+  border-bottom:1px solid #e8dccc;
+  font-size:1.2rem;
+  color:#2b1d13;
+}
+.section h2 small{
+  font-size:12px;
+  font-weight:normal;
+  color:#8b7355;
+  margin-left:10px;
 }
 
 /* Table */
@@ -73,29 +94,53 @@ thead{
   background:#3b2a1d;
   color:white;
 }
-th,td{
-  padding:10px;
-  font-size:14px;
+th{
+  padding:12px 15px;
+  font-size:13px;
+  font-weight:600;
   text-align:left;
 }
-tbody tr:nth-child(even){
+td{
+  padding:12px 15px;
+  font-size:13px;
+  border-bottom:1px solid #eee;
+  color:#333;
+}
+tbody tr:hover{
   background:#faf6f1;
 }
 
-/* Status badges */
-.badge{
-  padding:4px 8px;
-  border-radius:12px;
-  font-size:12px;
-  font-weight:bold;
+/* Status badges - ESTILO NOVO */
+.badge-status{
+  display:inline-block;
+  padding:5px 12px;
+  border-radius:20px;
+  font-size:11px;
+  font-weight:700;
+  text-align:center;
+  min-width:70px;
 }
-.ok{
-  background:#dcfce7;
-  color:#166534;
+.badge-status.ok{
+  background:#c8e6d9;
+  color:#1e6f3f;
+  border:1px solid #a0c4b0;
 }
-.vencido{
-  background:#fee2e2;
-  color:#991b1b;
+.badge-status.vencido{
+  background:#f5d1d1;
+  color:#b32d2d;
+  border:1px solid #e0b0b0;
+}
+
+/* Responsivo */
+@media (max-width: 700px){
+  .card-info{
+    grid-template-columns: repeat(2, 1fr);
+    gap:15px;
+  }
+  th, td{
+    padding:8px 10px;
+    font-size:12px;
+  }
 }
 </style>
 </head>
@@ -140,7 +185,7 @@ tbody tr:nth-child(even){
         </tr>
       </thead>
       <tbody>
-<tr><td>NR 23 - BRIGADA DE EMERGENCIA</td><td>29/08/2025</td><td>29/08/2027</td><td><span class=\"badge ok\">NO PRAZO</span></td></tr><tr><td>NR 12 - OP. MAQ. E EQUIP.</td><td>16/10/2025</td><td>25/06/2039</td><td><span class=\"badge ok\">NO PRAZO</span></td></tr>
+<tr><td>NR 23 - BRIGADA DE EMERGENCIA</td><td>29/08/2025</td><td>29/08/2027</td><td><span class=\"badge-status ok\">NO PRAZO</span></td></tr><tr><td>NR 12 - OP. MAQ. E EQUIP.</td><td>16/10/2025</td><td>25/06/2039</td><td><span class=\"badge-status ok\">NO PRAZO</span></td></tr>
       </tbody>
     </table>
   </div>
@@ -157,7 +202,7 @@ tbody tr:nth-child(even){
         </tr>
       </thead>
       <tbody>
-<tr><td>BOS / OFS</td><td>18/12/2025</td><td>18/12/2026</td><td><span class=\"badge ok\">NO PRAZO</span></td></tr><tr><td>CCC - CULTURA, CALIBRAÇÃO E CONSISTÊNCIA</td><td>19/12/2024</td><td>19/12/2025</td><td><span class=\"badge vencido\">VENCIDO</span></td></tr><tr><td>CCC - CULTURA, CALIBRAÇÃO E CONSISTÊNCIA</td><td>23/02/2026</td><td>23/02/2027</td><td><span class=\"badge ok\">NO PRAZO</span></td></tr><tr><td>NR 06 EPI</td><td>18/12/2025</td><td>18/12/2026</td><td><span class=\"badge ok\">NO PRAZO</span></td></tr><tr><td>GESTÃO DE RESÍDUOS</td><td>18/12/2025</td><td>18/12/2026</td><td><span class=\"badge ok\">NO PRAZO</span></td></tr><tr><td>LAIA - POLITICA INTEGRADA - OBJ E METAS</td><td>18/12/2025</td><td>18/12/2026</td><td><span class=\"badge ok\">NO PRAZO</span></td></tr><tr><td>LOTOTO</td><td>19/12/2025</td><td>19/12/2026</td><td><span class=\"badge ok\">NO PRAZO</span></td></tr><tr><td>MANUSEIO DE PRODUTOS QUIMICOS</td><td>19/12/2024</td><td>19/12/2025</td><td><span class=\"badge vencido\">VENCIDO</span></td></tr><tr><td>MANUSEIO DE PRODUTOS QUIMICOS</td><td>18/12/2025</td><td>18/12/2026</td><td><span class=\"badge ok\">NO PRAZO</span></td></tr><tr><td>PLANO DE ATENDIMENTO DE EMERGÊNCIAS</td><td>18/12/2025</td><td>18/12/2026</td><td><span class=\"badge ok\">NO PRAZO</span></td></tr><tr><td>PTW</td><td>19/12/2025</td><td>19/12/2026</td><td><span class=\"badge ok\">NO PRAZO</span></td></tr><tr><td>REPORTE DE INCIDENTES / POLITICA DE CONSEQUENCIAS</td><td>18/12/2025</td><td>18/12/2026</td><td><span class=\"badge ok\">NO PRAZO</span></td></tr><tr><td>WLMRA</td><td>19/12/2025</td><td>19/12/2026</td><td><span class=\"badge ok\">NO PRAZO</span></td></tr>
+<tr><td>BOS / OFS</td><td>18/12/2025</td><td>18/12/2026</td><td><span class=\"badge-status ok\">NO PRAZO</span></td></tr><tr><td>CCC - CULTURA, CALIBRAÇÃO E CONSISTÊNCIA</td><td>19/12/2024</td><td>19/12/2025</td><td><span class=\"badge-status vencido\">VENCIDO</span></td></tr><tr><td>CCC - CULTURA, CALIBRAÇÃO E CONSISTÊNCIA</td><td>23/02/2026</td><td>23/02/2027</td><td><span class=\"badge-status ok\">NO PRAZO</span></td></tr><tr><td>NR 06 EPI</td><td>18/12/2025</td><td>18/12/2026</td><td><span class=\"badge-status ok\">NO PRAZO</span></td></tr><tr><td>GESTÃO DE RESÍDUOS</td><td>18/12/2025</td><td>18/12/2026</td><td><span class=\"badge-status ok\">NO PRAZO</span></td></tr><tr><td>LAIA - POLITICA INTEGRADA - OBJ E METAS</td><td>18/12/2025</td><td>18/12/2026</td><td><span class=\"badge-status ok\">NO PRAZO</span></td></tr><tr><td>LOTOTO</td><td>19/12/2025</td><td>19/12/2026</td><td><span class=\"badge-status ok\">NO PRAZO</span></td></tr><tr><td>MANUSEIO DE PRODUTOS QUIMICOS</td><td>19/12/2024</td><td>19/12/2025</td><td><span class=\"badge-status vencido\">VENCIDO</span></td></tr><tr><td>MANUSEIO DE PRODUTOS QUIMICOS</td><td>18/12/2025</td><td>18/12/2026</td><td><span class=\"badge-status ok\">NO PRAZO</span></td></tr><tr><td>PLANO DE ATENDIMENTO DE EMERGÊNCIAS</td><td>18/12/2025</td><td>18/12/2026</td><td><span class=\"badge-status ok\">NO PRAZO</span></td></tr><tr><td>PTW</td><td>19/12/2025</td><td>19/12/2026</td><td><span class=\"badge-status ok\">NO PRAZO</span></td></tr><tr><td>REPORTE DE INCIDENTES / POLITICA DE CONSEQUENCIAS</td><td>18/12/2025</td><td>18/12/2026</td><td><span class=\"badge-status ok\">NO PRAZO</span></td></tr><tr><td>WLMRA</td><td>19/12/2025</td><td>19/12/2026</td><td><span class=\"badge-status ok\">NO PRAZO</span></td></tr>
       </tbody>
     </table>
   </div>
