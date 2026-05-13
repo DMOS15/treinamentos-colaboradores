@@ -38,7 +38,7 @@ body{
   padding:0 15px;
 }
 
-/* Card info - 4 colunas */
+/* Card info */
 .card-info{
   background:white;
   border-radius:12px;
@@ -62,6 +62,56 @@ body{
   color:#2b1d13;
 }
 
+/* Filtros */
+.filters{
+  background:white;
+  border-radius:12px;
+  padding:15px 20px;
+  margin-bottom:20px;
+  display:flex;
+  gap:15px;
+  flex-wrap:wrap;
+  align-items:flex-end;
+  box-shadow:0 2px 8px rgba(0,0,0,0.05);
+}
+.filter-group{
+  flex:1;
+  min-width:180px;
+}
+.filter-group label{
+  display:block;
+  font-size:11px;
+  font-weight:600;
+  color:#8b7355;
+  margin-bottom:5px;
+  letter-spacing:0.5px;
+}
+.filter-group input, .filter-group select{
+  width:100%;
+  padding:8px 12px;
+  border:1px solid #e0d5c5;
+  border-radius:8px;
+  font-size:13px;
+  background:white;
+}
+.filter-group input:focus, .filter-group select:focus{
+  outline:none;
+  border-color:#c65a1e;
+}
+.btn-limpar{
+  background:#e8e0d5;
+  border:none;
+  padding:8px 20px;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:13px;
+  font-weight:600;
+  color:#2b1d13;
+}
+.btn-limpar:hover{
+  background:#d5cbbc;
+}
+
 /* Sections */
 .section{
   background:white;
@@ -77,12 +127,6 @@ body{
   border-bottom:1px solid #e8dccc;
   font-size:1.2rem;
   color:#2b1d13;
-}
-.section h2 small{
-  font-size:12px;
-  font-weight:normal;
-  color:#8b7355;
-  margin-left:10px;
 }
 
 /* Table */
@@ -110,7 +154,7 @@ tbody tr:hover{
   background:#faf6f1;
 }
 
-/* Status badges - ESTILO NOVO */
+/* Status badges */
 .badge-status{
   display:inline-block;
   padding:5px 12px;
@@ -131,11 +175,25 @@ tbody tr:hover{
   border:1px solid #e0b0b0;
 }
 
+/* Mensagem sem resultados */
+.no-results{
+  text-align:center;
+  padding:30px;
+  color:#8b7355;
+  font-size:13px;
+}
+
 /* Responsivo */
 @media (max-width: 700px){
   .card-info{
     grid-template-columns: repeat(2, 1fr);
     gap:15px;
+  }
+  .filters{
+    flex-direction:column;
+  }
+  .btn-limpar{
+    align-self:flex-start;
   }
   th, td{
     padding:8px 10px;
@@ -148,8 +206,8 @@ tbody tr:hover{
 <body>
 
 <div class="header">
-  <h1>Treinamentos · Colaborador</h1>
-  <a href="../index.html">Voltar à lista</a>
+  <h1>📋 Treinamentos · Colaborador</h1>
+  <a href="../index.html">← Voltar à lista</a>
 </div>
 
 <div class="container">
@@ -173,41 +231,139 @@ tbody tr:hover{
     </div>
   </div>
 
-  <div class="section">
-    <h2>Treinamentos Normativos</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Treinamento</th>
-          <th>Treinado em</th>
-          <th>Vence em</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
-
-      </tbody>
-    </table>
+  <!-- FILTROS -->
+  <div class="filters">
+    <div class="filter-group">
+      <label>🔍 Buscar treinamento</label>
+      <input type="text" id="filtroTreinamento" placeholder="Digite o nome...">
+    </div>
+    <div class="filter-group">
+      <label>📊 Status</label>
+      <select id="filtroStatus">
+        <option value="">Todos</option>
+        <option value="NO PRAZO">NO PRAZO</option>
+        <option value="VENCIDO">VENCIDO</option>
+      </select>
+    </div>
+    <button class="btn-limpar" id="btnLimpar">Limpar filtros</button>
   </div>
 
   <div class="section">
-    <h2>Treinamentos Obrigatórios</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Treinamento</th>
-          <th>Treinado em</th>
-          <th>Vence em</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
+    <h2>📚 Treinamentos Normativos</h2>
+    <div style="overflow-x:auto;">
+      <table id="tabelaNormativos">
+        <thead>
+          <tr>
+            <th>Treinamento</th>
+            <th>Treinado em</th>
+            <th>Vence em</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="tbodyNormativos">
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>📌 Treinamentos Obrigatórios</h2>
+    <div style="overflow-x:auto;">
+      <table id="tabelaObrigatorios">
+        <thead>
+          <tr>
+            <th>Treinamento</th>
+            <th>Treinado em</th>
+            <th>Vence em</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="tbodyObrigatorios">
 <tr><td>BOS / OFS</td><td>18/12/2023</td><td>17/12/2024</td><td><span class=\"badge-status vencido\">VENCIDO</span></td></tr><tr><td>CCC - CULTURA, CALIBRAÇÃO E CONSISTÊNCIA</td><td>18/12/2023</td><td>17/12/2024</td><td><span class=\"badge-status vencido\">VENCIDO</span></td></tr><tr><td>GESTÃO DE RESÍDUOS</td><td>15/06/2023</td><td>14/06/2024</td><td><span class=\"badge-status vencido\">VENCIDO</span></td></tr><tr><td>LAIA - POLITICA INTEGRADA - OBJ E METAS</td><td>15/06/2023</td><td>14/06/2024</td><td><span class=\"badge-status vencido\">VENCIDO</span></td></tr><tr><td>LOTOTO</td><td>19/12/2025</td><td>19/12/2026</td><td><span class=\"badge-status ok\">NO PRAZO</span></td></tr><tr><td>PLANO DE ATENDIMENTO DE EMERGÊNCIAS</td><td>15/06/2023</td><td>14/06/2024</td><td><span class=\"badge-status vencido\">VENCIDO</span></td></tr><tr><td>PTW</td><td>19/12/2025</td><td>19/12/2026</td><td><span class=\"badge-status ok\">NO PRAZO</span></td></tr><tr><td>REPORTE DE INCIDENTES / POLITICA DE CONSEQUENCIAS</td><td>15/06/2023</td><td>14/06/2024</td><td><span class=\"badge-status vencido\">VENCIDO</span></td></tr><tr><td>WLMRA</td><td>19/12/2025</td><td>19/12/2026</td><td><span class=\"badge-status ok\">NO PRAZO</span></td></tr>
-      </tbody>
-    </table>
+        </tbody>
+      </table>
+    </div>
   </div>
 
 </div>
+
+<script>
+  // Função para filtrar as duas tabelas
+  function filtrarTabelas() {
+    const buscaTreinamento = document.getElementById('filtroTreinamento').value.toLowerCase();
+    const statusFiltro = document.getElementById('filtroStatus').value;
+    
+    // Filtrar tabela de Normativos
+    const linhasNormativos = document.querySelectorAll('#tabelaNormativos tbody tr');
+    let countNormativos = 0;
+    linhasNormativos.forEach(linha => {
+      const treinamento = linha.cells[0]?.innerText.toLowerCase() || '';
+      const status = linha.cells[3]?.innerText.trim() || '';
+      
+      const matchTreinamento = treinamento.includes(buscaTreinamento);
+      const matchStatus = statusFiltro === '' || status === statusFiltro;
+      
+      if (matchTreinamento && matchStatus) {
+        linha.style.display = '';
+        countNormativos++;
+      } else {
+        linha.style.display = 'none';
+      }
+    });
+    
+    // Filtrar tabela de Obrigatórios
+    const linhasObrigatorios = document.querySelectorAll('#tabelaObrigatorios tbody tr');
+    let countObrigatorios = 0;
+    linhasObrigatorios.forEach(linha => {
+      const treinamento = linha.cells[0]?.innerText.toLowerCase() || '';
+      const status = linha.cells[3]?.innerText.trim() || '';
+      
+      const matchTreinamento = treinamento.includes(buscaTreinamento);
+      const matchStatus = statusFiltro === '' || status === statusFiltro;
+      
+      if (matchTreinamento && matchStatus) {
+        linha.style.display = '';
+        countObrigatorios++;
+      } else {
+        linha.style.display = 'none';
+      }
+    });
+    
+    // Mostrar mensagem se não houver resultados
+    const tabelaNorm = document.getElementById('tabelaNormativos');
+    const tabelaObrig = document.getElementById('tabelaObrigatorios');
+    
+    // Remove mensagens existentes
+    document.querySelectorAll('.no-results-message').forEach(el => el.remove());
+    
+    if (countNormativos === 0) {
+      const msg = document.createElement('div');
+      msg.className = 'no-results no-results-message';
+      msg.innerHTML = '⚠️ Nenhum treinamento normativo encontrado com os filtros aplicados';
+      tabelaNorm.parentNode.insertBefore(msg, tabelaNorm.nextSibling);
+    }
+    
+    if (countObrigatorios === 0) {
+      const msg = document.createElement('div');
+      msg.className = 'no-results no-results-message';
+      msg.innerHTML = '⚠️ Nenhum treinamento obrigatório encontrado com os filtros aplicados';
+      tabelaObrig.parentNode.insertBefore(msg, tabelaObrig.nextSibling);
+    }
+  }
+  
+  // Função para limpar os filtros
+  function limparFiltros() {
+    document.getElementById('filtroTreinamento').value = '';
+    document.getElementById('filtroStatus').value = '';
+    filtrarTabelas();
+  }
+  
+  // Adicionar event listeners
+  document.getElementById('filtroTreinamento').addEventListener('input', filtrarTabelas);
+  document.getElementById('filtroStatus').addEventListener('change', filtrarTabelas);
+  document.getElementById('btnLimpar').addEventListener('click', limparFiltros);
+</script>
 
 </body>
 </html>
