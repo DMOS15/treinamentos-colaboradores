@@ -5,6 +5,9 @@ on:
     - cron: '0 * * * *' # Executa a cada hora
   workflow_dispatch: # Permite acionamento manual
 
+permissions:
+  contents: write # Garante que o GitHub Actions tem permissão para fazer o push
+
 jobs:
   atualizar-dados:
     runs-on: ubuntu-latest
@@ -12,8 +15,7 @@ jobs:
     steps:
       - name: Baixar o repositório
         uses: actions/checkout@v3
-        with:
-          ref: automacao-nuvem # Confirme se está a usar esta branch
+        # Removemos o 'ref: automacao-nuvem' para ele usar a branch padrão
 
       - name: Puxar arquivo de dados
         run: curl -L "https://drive.google.com/uc?export=download&id=1LWmsjkF22MP7aPUEUEVlx4gmnhniGCre" -o dados.json
