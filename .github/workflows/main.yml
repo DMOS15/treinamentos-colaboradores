@@ -1,0 +1,37 @@
+name: Sincronizar Portal Corporativo
+
+on:
+  schedule:
+    - cron: '0 * * * *' # Executa a cada hora
+  workflow_dispatch: # Permite acionamento manual
+
+permissions:
+  contents: write
+
+jobs:
+  atualizar-dados:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Baixar o repositório
+        uses: actions/checkout@v3
+
+      - name: Puxar arquivo de dados (dados.json)
+        run: curl -L "https://drive.google.com/uc?export=download&id=1LWmsjkF22MP7aPUEUEVlx4gmnhniGCre" -o dados.json
+
+      - name: Puxar novos HTMLs (Pasta Colaboradores)
+        run: |
+          pip install gdown
+          gdown --folder "https://drive.google.com/drive/folders/1kN-z2xY_1_K_UD0j-I93YzzK8-acKc4u" -O pasta_temp
+          
+          # Cria a pasta colaboradores no GitHub caso não exista e move os arquivos novos para lá
+          mkdir -p colaboradores
+          cp -f pasta_temp/* colaboradores/ 2>/dev/null || true
+
+      - name: Commit e Push para o GitHub
+        run: |
+          git config --global user.name "GitHub Action Bot"
+          git config --global user.email "action@github.com"
+          git add dados.json colaboradores/
+          git commit -m "Automação: Atualizando base e páginas de colaboradores" || exit 0
+          git push
