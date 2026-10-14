@@ -26,7 +26,7 @@ jobs:
           
           # Cria a pasta colaboradores no GitHub caso não exista e move os arquivos novos para lá
           mkdir -p colaboradores
-          cp -n pasta_temp/* colaboradores/ 2>/dev/null || true
+         cp -f pasta_temp/* colaboradores/ 2>/dev/null || true
 
       - name: Commit e Push para o GitHub
         run: |
