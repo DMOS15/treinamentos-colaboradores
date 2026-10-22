@@ -31,8 +31,8 @@
 
 			<div class="filters directory-filters" aria-label="Filtros de colaboradores">
 				<div class="filter-group">
-					<label for="nameSearch">Buscar por nome</label>
-					<input id="nameSearch" type="search" placeholder="Digite um nome..." autocomplete="off">
+					<label for="nameSearch">PESQUISA GERAL (Nome ou Treinamento)</label>
+					<input id="nameSearch" type="search" placeholder="PESQUISA GERAL (Nome ou Treinamento)" autocomplete="off">
 				</div>
 				<div class="filter-group">
 					<label for="areaFilter">Área</label>
@@ -118,13 +118,21 @@
 
 		function renderizarColaboradores() {
 			const busca = normalizarTexto(nameSearch.value);
+			const buscaCompacta = busca.replace(/\s+/g, "");
+			const correspondeBusca = valor => {
+				const texto = normalizarTexto(valor);
+				return texto.includes(busca) || texto.replace(/\s+/g, "").includes(buscaCompacta);
+			};
 			const areaSelecionada = areaFilter.value;
 			const coordenadorSelecionado = coordinatorFilter.value;
 			const direcao = sortOrder.value === "za" ? -1 : 1;
 
 			const filtrados = colaboradores
 				.filter(colaborador => {
-					return normalizarTexto(colaborador.COLABORADOR_EXIBICAO).includes(busca)
+					const nomeCorresponde = correspondeBusca(colaborador.COLABORADOR_EXIBICAO);
+					const treinamentoCorresponde = colaborador.TREINAMENTOS.some(correspondeBusca);
+
+					return (nomeCorresponde || treinamentoCorresponde)
 						&& (!areaSelecionada || colaborador.AREA === areaSelecionada)
 						&& (!coordenadorSelecionado || colaborador.COORDENADOR === coordenadorSelecionado);
 				})
@@ -156,8 +164,13 @@
 						COLABORADOR_EXIBICAO: registro.COLABORADOR_EXIBICAO || "",
 						AREA: registro.AREA || "",
 						COORDENADOR: registro.COORDENADOR || "",
-						NOME_ARQUIVO: registro.NOME_ARQUIVO || ""
+						NOME_ARQUIVO: registro.NOME_ARQUIVO || "",
+						TREINAMENTOS: []
 					});
+				}
+
+				if (registro.TREINAMENTO) {
+					grupos.get(id).TREINAMENTOS.push(registro.TREINAMENTO);
 				}
 			});
 
