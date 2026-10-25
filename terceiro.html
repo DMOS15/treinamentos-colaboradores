@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>SHECARD · Terceiro</title>
+	<link rel="stylesheet" href="./styles.css">
+	<style>
+		.third-party-status-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+			gap: 16px;
+		}
+
+		.third-party-status-grid > .card {
+			margin: 0;
+		}
+
+		.third-party-status-grid .info-grid {
+			gap: 16px;
+		}
+
+		.third-party-status-grid .badge {
+			align-self: flex-start;
+			margin-top: 4px;
+			white-space: normal;
+		}
+
+		.third-party-training-section {
+			margin-top: 20px;
+		}
+	</style>
+</head>
+<body>
+	<header class="header">
+		<div class="header-inner">
+			<h1>SHECARD · Treinamentos · Terceiro</h1>
+			<a href="./index_terceiros.html">← Voltar ao Portal de Terceiros</a>
+		</div>
+	</header>
+
+	<main id="resultado" aria-live="polite">
+		<p class="directory-status" role="status">Carregando dados...</p>
+	</main>
+
+	<script>
+		const resultado = document.getElementById("resultado");
+		const idTerceiro = new URLSearchParams(window.location.search).get("id");
+
+		function textoSeguro(valor, fallback = "Não informado") {
+			if (valor == null || String(valor).trim() === "") return fallback;
+			return String(valor);
+		}
+
+		function criarItemInfo(rotulo, valor) {
+			const item = document.createElement("div");
+			const titulo = document.createElement("span");
+			const conteudo = document.createElement("strong");
+
+			item.className = "info-item";
+			titulo.textContent = rotulo;
+			conteudo.textContent = textoSeguro(valor);
+			item.append(titulo, conteudo);
+			return item;
+		}
+
+		function classeStatus(status) {
+			const normalizado = textoSeguro(status, "").toLocaleUpperCase("pt-BR");
+			if (normalizado.includes("VENCID") || normalizado.includes("ATRAS")) return "vencido";
+			if (normalizado.includes("PENDENT") || normalizado.includes("AGUARD")) return "pendente";
+			return "ok";
+		}
+
+		function criarCartaoStatus(titulo, campos, status, rotuloStatus) {
+			const cartao = document.createElement("section");
+			const heading = document.createElement("h2");
+			const grade = document.createElement("div");
+
+			cartao.className = "card";
+			heading.textContent = titulo;
+			grade.className = "info-grid";
+			campos.forEach(([rotulo, valor]) => grade.append(criarItemInfo(rotulo, valor)));
+
+			if (status != null && String(status).trim() !== "") {
+				const statusItem = document.createElement("div");
+				const rotulo = document.createElement("span");
+				const badge = document.createElement("strong");
+
+				statusItem.className = "info-item";
+				rotulo.textContent = rotuloStatus;
+				badge.className = `badge ${classeStatus(status)}`;
+				badge.textContent = String(status);
+				statusItem.append(rotulo, badge);
+				grade.append(statusItem);
+			}
+
+			cartao.append(heading, grade);
+			return cartao;
+		}
+
+		function renderizarTerceiro(registros) {
+			const perfil = { ...registros[0] };
+			[
+				"COLABORADOR_EXIBICAO",
+				"EMPRESA",
+				"CARGO",
+				"INTEGRAÇÃO_DATA",
+				"INTEGRACAO_VENCE_EM",
+				"STATUS_INTEGRACAO",
+				"ASO_EMISSAO",
+				"ASO_VENCE_EM",
+				"ASO_STATUS",
+				"FICHA_EPI"
+			].forEach(campo => {
+				if (perfil[campo] == null || String(perfil[campo]).trim() === "") {
+					const registroComValor = registros.find(registro =>
+						registro[campo] != null && String(registro[campo]).trim() !== ""
+					);
+					if (registroComValor) perfil[campo] = registroComValor[campo];
+				}
+			});
+			const treinamentos = registros.filter(registro =>
+				registro.TREINAMENTO != null && String(registro.TREINAMENTO).trim() !== ""
+			);
+			const conteudo = document.createDocumentFragment();
+			const cartaoPerfil = document.createElement("section");
+			const infoGrid = document.createElement("div");
+			const statusGrid = document.createElement("div");
+			const secaoTreinamentos = document.createElement("section");
+			const tituloTreinamentos = document.createElement("h2");
+			const tabelaContainer = document.createElement("div");
+			const tabela = document.createElement("table");
+			const cabecalho = document.createElement("thead");
+			const linhaCabecalho = document.createElement("tr");
+			const corpo = document.createElement("tbody");
+
+			cartaoPerfil.className = "card profile-card";
+			infoGrid.className = "info-grid";
+			infoGrid.append(
+				criarItemInfo("Nome", perfil.COLABORADOR_EXIBICAO),
+				criarItemInfo("Empresa", perfil.EMPRESA),
+				criarItemInfo("Cargo", perfil.CARGO)
+			);
+			cartaoPerfil.append(infoGrid);
+
+			statusGrid.className = "third-party-status-grid";
+			statusGrid.append(
+				criarCartaoStatus(
+					"Integração",
+					[
+						["Data", perfil["INTEGRAÇÃO_DATA"]],
+						["Vence em", perfil.INTEGRACAO_VENCE_EM]
+					],
+					perfil.STATUS_INTEGRACAO,
+					"Status"
+				),
+				criarCartaoStatus(
+					"ASO",
+					[
+						["Emissão", perfil.ASO_EMISSAO],
+						["Vence em", perfil.ASO_VENCE_EM]
+					],
+					perfil.ASO_STATUS,
+					"Status"
+				),
+				criarCartaoStatus("Ficha de EPI", [["Ficha", perfil.FICHA_EPI]], null, "Status")
+			);
+
+			secaoTreinamentos.className = "section third-party-training-section";
+			tituloTreinamentos.textContent = `Treinamentos (${treinamentos.length})`;
+			tabelaContainer.className = "table-scroll";
+			tabela.append(cabecalho, corpo);
+			const nomesColunas = ["Treinamento", "Realizado em", "Vence em", "Status"];
+			const camposColunas = [
+				"TREINAMENTO",
+				"TREINAMENTO_TREINADO_EM",
+				"TREINAMENTO_VENCE_EM",
+				"TREINAMENTO_STATUS"
+			];
+
+			nomesColunas.forEach(nome => {
+				const celula = document.createElement("th");
+				celula.scope = "col";
+				celula.textContent = nome;
+				linhaCabecalho.append(celula);
+			});
+			cabecalho.append(linhaCabecalho);
+
+			treinamentos.forEach(treinamento => {
+				const linha = document.createElement("tr");
+				camposColunas.forEach((campo, indice) => {
+					const celula = document.createElement("td");
+					const valor = treinamento[campo];
+					if (indice === 3 && valor != null && String(valor).trim() !== "") {
+						const badge = document.createElement("span");
+						badge.className = `badge ${classeStatus(valor)}`;
+						badge.textContent = String(valor);
+						celula.append(badge);
+					} else {
+						celula.textContent = textoSeguro(valor);
+					}
+					linha.append(celula);
+				});
+				corpo.append(linha);
+			});
+
+			if (treinamentos.length === 0) {
+				const linhaVazia = document.createElement("tr");
+				const celulaVazia = document.createElement("td");
+				celulaVazia.colSpan = nomesColunas.length;
+				celulaVazia.textContent = "Nenhum treinamento encontrado.";
+				linhaVazia.append(celulaVazia);
+				corpo.append(linhaVazia);
+			}
+
+			tabelaContainer.append(tabela);
+			secaoTreinamentos.append(tituloTreinamentos, tabelaContainer);
+			conteudo.append(cartaoPerfil, statusGrid, secaoTreinamentos);
+			resultado.replaceChildren(conteudo);
+		}
+
+		if (!idTerceiro) {
+			const mensagem = document.createElement("p");
+			mensagem.className = "empty-state";
+			mensagem.textContent = "Colaborador Terceiro não encontrado ou ID inválido.";
+			resultado.replaceChildren(mensagem);
+		} else {
+			fetch("./dados_terceiros.json")
+				.then(response => {
+					if (!response.ok) throw new Error(`Falha HTTP ${response.status}`);
+					return response.json();
+				})
+				.then(dados => {
+					if (!Array.isArray(dados)) {
+						throw new Error("O conteúdo não é uma lista JSON válida.");
+					}
+					const registros = dados.filter(registro =>
+						registro && String(registro.IDFIXO ?? "").trim() === idTerceiro
+					);
+
+					if (registros.length === 0) {
+						const mensagem = document.createElement("p");
+						mensagem.className = "empty-state";
+						mensagem.textContent = "Colaborador Terceiro não encontrado ou ID inválido.";
+						resultado.replaceChildren(mensagem);
+						return;
+					}
+
+					renderizarTerceiro(registros);
+				})
+				.catch(error => {
+					console.error("Não foi possível carregar dados_terceiros.json:", error);
+					const mensagem = document.createElement("p");
+					mensagem.className = "empty-state";
+					mensagem.textContent = "Não foi possível carregar os dados do terceiro. Verifique se dados_terceiros.json contém uma lista JSON válida e tente novamente.";
+					resultado.replaceChildren(mensagem);
+				});
+		}
+	</script>
+</body>
+</html>

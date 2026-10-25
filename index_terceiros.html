@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>SHECARD - Terceiros</title>
+	<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+	<header class="header">
+		<div class="header-inner">
+			<h1>SHECARD · Treinamentos</h1>
+			<a href="./index.html">Portal JDE</a>
+		</div>
+	</header>
+
+	<main class="directory-main">
+		<section aria-labelledby="directoryTitle">
+			<div class="directory-heading">
+				<div>
+					<h2 id="directoryTitle">Terceiros</h2>
+					<p class="directory-summary" id="directorySummary" aria-live="polite">Carregando dados...</p>
+				</div>
+				<div class="filter-group directory-sort">
+					<label for="sortOrder">Ordenar por nome</label>
+					<select id="sortOrder">
+						<option value="az">A-Z</option>
+						<option value="za">Z-A</option>
+					</select>
+				</div>
+			</div>
+
+			<div class="filters directory-filters" aria-label="Filtros de terceiros">
+				<div class="filter-group">
+					<label for="nameSearch">Pesquisa por nome</label>
+					<input id="nameSearch" type="search" placeholder="Digite o nome..." autocomplete="off">
+				</div>
+				<div class="filter-group">
+					<label for="companyFilter">Empresa</label>
+					<select id="companyFilter">
+						<option value="">Todas as empresas</option>
+					</select>
+				</div>
+			</div>
+
+			<p class="directory-status" id="directoryStatus" role="status"></p>
+			<div class="directory-grid" id="thirdPartyList" aria-live="polite"></div>
+		</section>
+	</main>
+
+	<script>
+		const nameSearch = document.getElementById("nameSearch");
+		const companyFilter = document.getElementById("companyFilter");
+		const sortOrder = document.getElementById("sortOrder");
+		const thirdPartyList = document.getElementById("thirdPartyList");
+		const directorySummary = document.getElementById("directorySummary");
+		const directoryStatus = document.getElementById("directoryStatus");
+		const collator = new Intl.Collator("pt-BR", { sensitivity: "base" });
+		let terceiros = [];
+
+		function valorTexto(valor) {
+			return valor == null ? "" : String(valor).trim();
+		}
+
+		function normalizarTexto(valor) {
+			return valorTexto(valor).toLocaleLowerCase("pt-BR");
+		}
+
+		function preencherFiltro(select, valores, rotuloInicial) {
+			const fragmento = document.createDocumentFragment();
+			fragmento.append(new Option(rotuloInicial, ""));
+
+			[...new Set(valores.map(valorTexto).filter(Boolean))]
+				.sort((a, b) => collator.compare(a, b))
+				.forEach(valor => fragmento.append(new Option(valor, valor)));
+
+			select.replaceChildren(fragmento);
+		}
+
+		function agruparTerceiros(registros) {
+			const grupos = new Map();
+
+			registros.forEach(registro => {
+				if (!registro || typeof registro !== "object") return;
+				const id = valorTexto(registro.IDFIXO);
+				if (!id) return;
+
+				if (!grupos.has(id)) {
+					grupos.set(id, {
+						IDFIXO: id,
+						COLABORADOR_EXIBICAO: valorTexto(registro.COLABORADOR_EXIBICAO),
+						EMPRESA: valorTexto(registro.EMPRESA)
+					});
+					return;
+				}
+
+				const terceiro = grupos.get(id);
+				if (!terceiro.COLABORADOR_EXIBICAO) terceiro.COLABORADOR_EXIBICAO = valorTexto(registro.COLABORADOR_EXIBICAO);
+				if (!terceiro.EMPRESA) terceiro.EMPRESA = valorTexto(registro.EMPRESA);
+			});
+
+			return [...grupos.values()];
+		}
+
+		function criarCardTerceiro(terceiro) {
+			const card = document.createElement("article");
+			const titulo = document.createElement("h3");
+			const link = document.createElement("a");
+			const detalhes = document.createElement("dl");
+			const grupo = document.createElement("div");
+			const termo = document.createElement("dt");
+			const definicao = document.createElement("dd");
+
+			card.className = "card employee-card";
+			link.href = `./terceiro.html?id=${encodeURIComponent(terceiro.IDFIXO)}`;
+			link.textContent = terceiro.COLABORADOR_EXIBICAO || "Nome não informado";
+			titulo.append(link);
+
+			detalhes.className = "employee-details";
+			termo.textContent = "Empresa";
+			definicao.textContent = terceiro.EMPRESA || "Não informada";
+			grupo.append(termo, definicao);
+			detalhes.append(grupo);
+			card.append(titulo, detalhes);
+			return card;
+		}
+
+		function renderizarTerceiros() {
+			const busca = normalizarTexto(nameSearch.value);
+			const direcao = sortOrder.value === "za" ? -1 : 1;
+			const filtrados = terceiros
+				.filter(terceiro =>
+					(!busca || normalizarTexto(terceiro.COLABORADOR_EXIBICAO).includes(busca))
+					&& (!companyFilter.value || terceiro.EMPRESA === companyFilter.value)
+				)
+				.sort((a, b) => {
+					const comparacaoNome = collator.compare(a.COLABORADOR_EXIBICAO, b.COLABORADOR_EXIBICAO);
+					return comparacaoNome === 0
+						? collator.compare(a.IDFIXO, b.IDFIXO)
+						: comparacaoNome * direcao;
+				});
+
+			const fragmento = document.createDocumentFragment();
+			filtrados.forEach(terceiro => fragmento.append(criarCardTerceiro(terceiro)));
+			thirdPartyList.replaceChildren(fragmento);
+			directorySummary.textContent = `Exibindo ${filtrados.length} de ${terceiros.length} terceiros`;
+			directoryStatus.textContent = filtrados.length ? "" : "Nenhum terceiro encontrado para esses filtros.";
+		}
+
+		nameSearch.addEventListener("input", renderizarTerceiros);
+		companyFilter.addEventListener("change", renderizarTerceiros);
+		sortOrder.addEventListener("change", renderizarTerceiros);
+
+		fetch("./dados_terceiros.json")
+			.then(response => {
+				if (!response.ok) throw new Error(`Falha HTTP ${response.status}`);
+				return response.json();
+			})
+			.then(registros => {
+				if (!Array.isArray(registros)) {
+					throw new Error("O conteúdo não é uma lista JSON válida.");
+				}
+				terceiros = agruparTerceiros(registros);
+				preencherFiltro(companyFilter, terceiros.map(item => item.EMPRESA), "Todas as empresas");
+				renderizarTerceiros();
+			})
+			.catch(error => {
+				console.error("Não foi possível carregar dados_terceiros.json:", error);
+				directorySummary.textContent = "Os terceiros não puderam ser carregados.";
+				directoryStatus.textContent = "Verifique se dados_terceiros.json contém uma lista JSON válida e tente novamente.";
+			});
+	</script>
+</body>
+</html>
