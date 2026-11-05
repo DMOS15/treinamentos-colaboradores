@@ -3,26 +3,58 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>SHECARD - Terceiros</title>
+	<title>SHECard | Terceiros</title>
+	<script src="./shecard-ui.js"></script>
 	<link rel="stylesheet" href="./styles.css">
 </head>
 <body>
 	<header class="header">
 		<div class="header-inner">
-			<h1>SHECARD · Treinamentos</h1>
-			<a href="./index.html">Portal JDE</a>
+			<div class="brand">
+				<img class="header-jde-logo" src="./assets/jde-logo.png" alt="Jacobs Douwe Egberts">
+				<div class="brand-copy">
+					<p class="brand-name">SHECard</p>
+					<h1>Portal Corporativo</h1>
+				</div>
+			</div>
+			<div class="header-actions">
+				<button class="theme-toggle" id="themeToggle" type="button" aria-pressed="false">
+					<span class="theme-toggle-icon" aria-hidden="true">☾</span>
+					<span id="themeToggleLabel">Modo escuro</span>
+				</button>
+				<a href="./index.html">Portal Colaboradores <span aria-hidden="true">↗</span></a>
+			</div>
 		</div>
 	</header>
 
 	<main class="directory-main">
+		<section class="hero" aria-labelledby="heroTitle">
+			<div class="hero-copy">
+				<p class="hero-eyebrow">Portal de Terceiros</p>
+				<div class="hero-brand-lockup">
+					<img src="./assets/jde-logo.png" alt="Jacobs Douwe Egberts">
+					<span class="hero-brand-divider" aria-hidden="true"></span>
+					<h2 id="heroTitle">SHECard Terceiros</h2>
+				</div>
+				<p class="hero-slogan">Portal de Consulta de Treinamentos de Empresas Contratadas</p>
+				<p class="hero-description">Consulte terceiros e localize rapidamente seus registros de treinamento.</p>
+			</div>
+			<div class="hero-factory" aria-label="Jacobs Douwe Egberts, Piumhi Factory">
+				<span class="hero-factory-mark" aria-hidden="true">JDE</span>
+				<span class="hero-factory-name">Jacobs Douwe Egberts</span>
+				<span class="hero-factory-location">Piumhi Factory</span>
+			</div>
+		</section>
+
 		<section aria-labelledby="directoryTitle">
 			<div class="directory-heading">
 				<div>
 					<h2 id="directoryTitle">Terceiros</h2>
 					<p class="directory-summary" id="directorySummary" aria-live="polite">Carregando dados...</p>
 				</div>
+				<span class="result-count" id="directoryResultCount" aria-live="polite">— resultados</span>
 				<div class="filter-group directory-sort">
-					<label for="sortOrder">Ordenar por nome</label>
+					<label for="sortOrder"><span aria-hidden="true">↕</span> Ordenar por nome</label>
 					<select id="sortOrder">
 						<option value="az">A-Z</option>
 						<option value="za">Z-A</option>
@@ -31,15 +63,24 @@
 			</div>
 
 			<div class="filters directory-filters" aria-label="Filtros de terceiros">
-				<div class="filter-group">
-					<label for="nameSearch">Pesquisa por nome</label>
-					<input id="nameSearch" type="search" placeholder="Digite o nome..." autocomplete="off">
+				<div class="filters-header">
+					<div>
+						<p class="section-eyebrow">Diretório</p>
+						<h3>Encontre terceiros</h3>
+					</div>
+					<p>Refine a lista por nome ou empresa contratada.</p>
 				</div>
-				<div class="filter-group">
-					<label for="companyFilter">Empresa</label>
-					<select id="companyFilter">
-						<option value="">Todas as empresas</option>
-					</select>
+				<div class="filters-controls">
+					<div class="filter-group">
+						<label for="nameSearch"><span aria-hidden="true">⌕</span> Pesquisa por nome</label>
+						<input id="nameSearch" type="search" placeholder="Digite o nome..." autocomplete="off">
+					</div>
+					<div class="filter-group">
+						<label for="companyFilter"><span aria-hidden="true">◈</span> Empresa</label>
+						<select id="companyFilter">
+							<option value="">Todas as empresas</option>
+						</select>
+					</div>
 				</div>
 			</div>
 
@@ -56,6 +97,7 @@
 		const directorySummary = document.getElementById("directorySummary");
 		const directoryStatus = document.getElementById("directoryStatus");
 		const collator = new Intl.Collator("pt-BR", { sensitivity: "base" });
+		const numberFormatter = new Intl.NumberFormat("pt-BR");
 		let terceiros = [];
 
 		function valorTexto(valor) {
@@ -107,21 +149,34 @@
 			const titulo = document.createElement("h3");
 			const link = document.createElement("a");
 			const detalhes = document.createElement("dl");
+			const cabecalho = document.createElement("div");
+			const avatar = document.createElement("span");
+			const identidade = document.createElement("div");
+			const empresaBadge = document.createElement("span");
 			const grupo = document.createElement("div");
 			const termo = document.createElement("dt");
 			const definicao = document.createElement("dd");
 
 			card.className = "card employee-card";
+			cabecalho.className = "employee-card-heading";
+			avatar.className = "employee-avatar";
+			avatar.setAttribute("aria-hidden", "true");
+			avatar.textContent = "♙";
+			identidade.className = "employee-identity";
 			link.href = `./terceiro.html?id=${encodeURIComponent(terceiro.IDFIXO)}`;
 			link.textContent = terceiro.COLABORADOR_EXIBICAO || "Nome não informado";
 			titulo.append(link);
+			empresaBadge.className = "area-badge";
+			empresaBadge.textContent = terceiro.EMPRESA || "Empresa não informada";
+			identidade.append(titulo, empresaBadge);
+			cabecalho.append(avatar, identidade);
 
 			detalhes.className = "employee-details";
 			termo.textContent = "Empresa";
 			definicao.textContent = terceiro.EMPRESA || "Não informada";
 			grupo.append(termo, definicao);
 			detalhes.append(grupo);
-			card.append(titulo, detalhes);
+			card.append(cabecalho, detalhes);
 			return card;
 		}
 
@@ -144,6 +199,7 @@
 			filtrados.forEach(terceiro => fragmento.append(criarCardTerceiro(terceiro)));
 			thirdPartyList.replaceChildren(fragmento);
 			directorySummary.textContent = `Exibindo ${filtrados.length} de ${terceiros.length} terceiros`;
+			directoryResultCount.textContent = `${numberFormatter.format(filtrados.length)} ${filtrados.length === 1 ? "resultado" : "resultados"}`;
 			directoryStatus.textContent = filtrados.length ? "" : "Nenhum terceiro encontrado para esses filtros.";
 		}
 

@@ -33,6 +33,18 @@ jobs:
           mkdir -p colaboradores
           cp -f pasta_temp/* colaboradores/ 2>/dev/null || true
 
+          # Mantém o tema e o rodapé compartilhados nas páginas regeneradas.
+          for file in colaboradores/*.html; do
+            [ -f "$file" ] || continue
+            if ! grep -q 'shecard-ui.js' "$file"; then
+              if ! grep -q '</head>' "$file"; then
+                echo "Tag </head> não encontrada em $file" >&2
+                exit 1
+              fi
+              sed -i '/<\/head>/i <script src="../shecard-ui.js"></script>' "$file"
+            fi
+          done
+
       - name: Commit e Push para o GitHub
         run: |
           git config --global user.name "GitHub Action Bot"
