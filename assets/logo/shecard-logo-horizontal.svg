@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 390 88">
+  <rect x="8" y="12" width="64" height="64" rx="14" fill="#3F3A31"/>
+  <rect x="17" y="23" width="46" height="35" rx="6" fill="none" stroke="#FCF9F4" stroke-width="2.5"/>
+  <circle cx="28" cy="36" r="5" fill="#D3BA91"/>
+  <path d="M21.5 50c.8-4 3.2-6 6.5-6s5.7 2 6.5 6" fill="none" stroke="#D3BA91" stroke-linecap="round" stroke-width="2.5"/>
+  <path d="M39 33h16M39 39h10" stroke="#FCF9F4" stroke-linecap="round" stroke-width="2.5"/>
+  <path d="M47 41l11 4v7c0 8-5.3 13-11 16-5.7-3-11-8-11-16v-7z" fill="#CC902D" stroke="#FCF9F4" stroke-linejoin="round" stroke-width="1.8"/>
+  <path d="M42.5 52l3.2 3.2 6.5-7" fill="none" stroke="#FCF9F4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.6"/>
+  <text x="88" y="48" fill="#FCF9F4" font-family="Segoe UI, Arial, sans-serif" font-size="34" font-weight="750" letter-spacing="-1.5">
+    SHE<tspan fill="#D3BA91">Card</tspan>
+  </text>
+  <text x="90" y="68" fill="#E8DDCB" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="700" letter-spacing="2.1">PORTAL CORPORATIVO</text>
+</svg>
