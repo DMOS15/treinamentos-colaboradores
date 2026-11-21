@@ -2,7 +2,7 @@
     color-scheme: light;
     font-family: "Segoe UI", Arial, sans-serif;
     color: #3F3A31;
-    background: #FCF9F4;
+    background: var(--page-bg);
     font-synthesis: none;
     text-rendering: optimizeLegibility;
     --ink: #3F3A31;
@@ -18,6 +18,14 @@
     --crema: #FCF9F4;
     --page-bg: #FCF9F4;
     --shadow: 0 8px 24px rgba(63, 58, 49, 0.09);
+    --table-border: #eee5d7;
+    --table-row-hover: #fbf6eb;
+    --control-bg: #fffdfa;
+    --control-border: rgba(211, 186, 145, 0.8);
+    --placeholder: #8C7454;
+    --stat-good: #527a52;
+    --stat-overdue: #a04830;
+    --stat-pending: #a66e18;
 }
 
 * {
@@ -262,15 +270,15 @@ body {
 }
 
 .stats-card .stat-good strong {
-    color: #527a52;
+    color: var(--stat-good);
 }
 
 .stats-card .stat-overdue strong {
-    color: var(--ambition);
+    color: var(--stat-overdue);
 }
 
 .stats-card .stat-pending strong {
-    color: #a66e18;
+    color: var(--stat-pending);
 }
 
 .filters {
@@ -302,8 +310,8 @@ body {
     min-height: 44px;
     padding: 10px 12px;
     color: var(--ink);
-    background: #fffdfa;
-    border: 1px solid rgba(211, 186, 145, 0.8);
+    background: var(--control-bg);
+    border: 1px solid var(--control-border);
     border-radius: 6px;
     font: inherit;
 }
@@ -365,7 +373,7 @@ th {
 
 td {
     padding: 13px 14px;
-    border-bottom: 1px solid #eee5d7;
+    border-bottom: 1px solid var(--table-border);
     font-size: 14px;
 }
 
@@ -374,7 +382,7 @@ tbody tr:last-child td {
 }
 
 tbody tr:hover {
-    background: #fbf6eb;
+    background: var(--table-row-hover);
 }
 
 .badge {
@@ -531,6 +539,14 @@ tbody tr:hover {
     --crema: #352f27;
     --page-bg: #1d1b18;
     --shadow: 0 12px 30px rgba(0, 0, 0, 0.24);
+    --table-border: #413a31;
+    --table-row-hover: #332e27;
+    --control-bg: #211f1b;
+    --control-border: #514638;
+    --placeholder: #b7a995;
+    --stat-good: #8bbb88;
+    --stat-overdue: #f09a81;
+    --stat-pending: #edc36a;
 }
 
 :root[data-theme="dark"] .card,
@@ -548,20 +564,20 @@ tbody tr:hover {
 :root[data-theme="dark"] .filter-group input,
 :root[data-theme="dark"] .filter-group select {
     color: var(--ink);
-    background: #211f1b;
-    border-color: #514638;
+    background: var(--control-bg);
+    border-color: var(--control-border);
 }
 
 :root[data-theme="dark"] .filter-group input::placeholder {
-    color: #9c8f7d;
+    color: var(--placeholder);
 }
 
 :root[data-theme="dark"] td {
-    border-color: #413a31;
+    border-color: var(--table-border);
 }
 
 :root[data-theme="dark"] tbody tr:hover {
-    background: #332e27;
+    background: var(--table-row-hover);
 }
 
 :root[data-theme="dark"] .employee-card:hover {
@@ -682,9 +698,27 @@ tbody tr:hover {
 }
 
 .header-actions > a {
-    padding: 9px 0;
+    padding: 9px 12px;
+    color: #fff6e9;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.32);
+    border-radius: 9px;
     font-size: 12px;
     white-space: nowrap;
+    transition: background 160ms ease, border-color 160ms ease;
+}
+
+.header-actions > a:hover,
+.header-actions > a:focus-visible {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+}
+
+.header-actions > a:focus-visible {
+    outline: 2px solid #f0d7a6;
+    outline-offset: 3px;
 }
 
 .directory-main {
@@ -1364,7 +1398,18 @@ tbody tr:hover {
 }
 
 :root[data-theme="dark"] .header a {
-    color: #fff6e9;
+    color: #fff;
+}
+
+:root[data-theme="dark"] .header-actions > a {
+    background: rgba(255, 255, 255, 0.14);
+    border-color: rgba(255, 255, 255, 0.48);
+}
+
+:root[data-theme="dark"] .header-actions > a:hover,
+:root[data-theme="dark"] .header-actions > a:focus-visible {
+    background: rgba(255, 255, 255, 0.24);
+    border-color: rgba(255, 255, 255, 0.78);
 }
 
 :root[data-theme="dark"] .theme-toggle {

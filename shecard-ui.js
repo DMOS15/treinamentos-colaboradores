@@ -1,7 +1,28 @@
 (() => {
 	const themeKey = "shecard-theme";
 	const root = document.documentElement;
-	root.dataset.theme = localStorage.getItem(themeKey) === "dark" ? "dark" : "light";
+	const readTheme = () => localStorage.getItem(themeKey) === "dark" ? "dark" : "light";
+
+	function applyTheme(theme) {
+		root.dataset.theme = theme === "dark" ? "dark" : "light";
+		const button = document.getElementById("themeToggle");
+		if (!button) return;
+
+		const isDark = root.dataset.theme === "dark";
+		button.setAttribute("aria-pressed", String(isDark));
+		const label = button.querySelector("#themeToggleLabel");
+		const icon = button.querySelector(".theme-toggle-icon");
+		if (label) label.textContent = isDark ? "Modo claro" : "Modo escuro";
+		if (icon) icon.textContent = isDark ? "☀" : "☾";
+	}
+
+	applyTheme(readTheme());
+	window.addEventListener("storage", event => {
+		if (event.key === themeKey || event.key === null) {
+			applyTheme(event.newValue);
+		}
+	});
+
 	const isEmployeePage = window.location.pathname.includes("/colaboradores/");
 	const pathPrefix = isEmployeePage ? "../" : "./";
 
@@ -14,24 +35,28 @@
 			if (heading) {
 				const brand = document.createElement("div");
 				const logo = document.createElement("img");
-				const copy = document.createElement("div");
-				const name = document.createElement("p");
 
 				brand.className = "brand";
-				logo.className = "header-jde-logo";
-				logo.src = `${pathPrefix}assets/jde-logo.png`;
-				logo.alt = "Jacobs Douwe Egberts";
-				copy.className = "brand-copy";
-				name.className = "brand-name";
-				name.textContent = "SHECard";
-				heading.textContent = isEmployeePage ? "Portal do Colaborador" : "Portal de Terceiros";
-				copy.append(name, heading);
-				brand.append(logo, copy);
+				logo.className = "shecard-header-logo";
+				logo.src = `${pathPrefix}assets/logo/shecard-logo-horizontal.svg`;
+				logo.alt = "SHECard · Portal Corporativo";
+				heading.className = "visually-hidden";
+				heading.textContent = `SHECard · ${isEmployeePage ? "Portal do Colaborador" : "Portal de Terceiros"}`;
+				brand.append(logo, heading);
 				headerInner.insertBefore(brand, headerInner.firstChild);
 			}
 		}
 
-		const headerActions = headerInner.querySelector(".header-actions") || headerInner;
+		let headerActions = headerInner.querySelector(".header-actions");
+		if (!headerActions) {
+			headerActions = document.createElement("div");
+			headerActions.className = "header-actions";
+			Array.from(headerInner.children)
+				.filter(child => !child.classList.contains("brand"))
+				.forEach(child => headerActions.append(child));
+			headerInner.append(headerActions);
+		}
+
 		let button = document.getElementById("themeToggle");
 		if (!button) {
 			button = document.createElement("button");
@@ -40,30 +65,23 @@
 			button.type = "button";
 			button.innerHTML = '<span class="theme-toggle-icon" aria-hidden="true"></span><span id="themeToggleLabel"></span>';
 			const link = headerActions.querySelector("a");
-			headerActions.insertBefore(button, link);
-		}
-
-		const label = button.querySelector("#themeToggleLabel");
-		const icon = button.querySelector(".theme-toggle-icon");
-
-		function updateControl() {
-			const isDark = root.dataset.theme === "dark";
-			button.setAttribute("aria-pressed", String(isDark));
-			if (label) label.textContent = isDark ? "Modo claro" : "Modo escuro";
-			if (icon) icon.textContent = isDark ? "☀" : "☾";
+			if (link) {
+				headerActions.insertBefore(button, link);
+			} else {
+				headerActions.append(button);
+			}
 		}
 
 		if (button.dataset.themeReady !== "true") {
 			button.addEventListener("click", () => {
 				const nextTheme = root.dataset.theme === "dark" ? "light" : "dark";
-				root.dataset.theme = nextTheme;
 				localStorage.setItem(themeKey, nextTheme);
-				updateControl();
+				applyTheme(nextTheme);
 			});
 			button.dataset.themeReady = "true";
 		}
 
-		updateControl();
+		applyTheme(readTheme());
 	}
 
 	function createFooterElement(className, tagName, text) {
