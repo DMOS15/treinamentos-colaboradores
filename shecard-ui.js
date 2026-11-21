@@ -57,6 +57,14 @@
 			headerInner.append(headerActions);
 		}
 
+		if (isEmployeePage && !headerActions.querySelector(".header-jde-logo")) {
+			const logo = document.createElement("img");
+			logo.className = "header-jde-logo";
+			logo.src = `${pathPrefix}assets/jde-logo.png`;
+			logo.alt = "Jacobs Douwe Egberts";
+			headerActions.insertBefore(logo, headerActions.firstChild);
+		}
+
 		let button = document.getElementById("themeToggle");
 		if (!button) {
 			button = document.createElement("button");

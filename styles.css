@@ -19,6 +19,7 @@
     --page-bg: #FCF9F4;
     --shadow: 0 8px 24px rgba(63, 58, 49, 0.09);
     --table-border: #eee5d7;
+    --table-row-alt: #fffdf9;
     --table-row-hover: #fbf6eb;
     --control-bg: #fffdfa;
     --control-border: rgba(211, 186, 145, 0.8);
@@ -26,6 +27,10 @@
     --stat-good: #527a52;
     --stat-overdue: #a04830;
     --stat-pending: #a66e18;
+    --profile-field-bg: rgba(255, 253, 250, 0.78);
+    --profile-field-border: rgba(211, 186, 145, 0.46);
+    --kpi-bg: #fffdfa;
+    --kpi-border: rgba(211, 186, 145, 0.55);
 }
 
 * {
@@ -241,28 +246,50 @@ body {
 
 .stats-card .info-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 16px;
+    gap: 12px;
 }
 
 .stats-card .info-item {
-    padding: 4px 16px;
-    border-left: 1px solid rgba(140, 116, 84, 0.22);
+    min-height: 112px;
+    justify-content: space-between;
+    padding: 17px 18px;
+    background: var(--kpi-bg);
+    border: 1px solid var(--kpi-border);
+    border-top: 3px solid var(--kpi-accent, var(--line));
+    border-radius: 12px;
 }
 
 .stats-card .info-item:first-child {
-    padding-left: 0;
-    border-left: 0;
+    padding-left: 18px;
 }
 
 .stats-card .info-item > span {
     color: var(--mocha);
+    font-size: 10px;
+    letter-spacing: 0.08em;
 }
 
-.stats-card .stats strong {
+.stats-card .info-item > strong {
     color: var(--brown-primary);
-    font-size: 30px;
+    font-size: clamp(30px, 3vw, 38px);
     line-height: 1.1;
     font-variant-numeric: tabular-nums;
+}
+
+.stats-card .stat-total {
+    --kpi-accent: var(--brown-primary);
+}
+
+.stats-card .stat-good {
+    --kpi-accent: var(--stat-good);
+}
+
+.stats-card .stat-overdue {
+    --kpi-accent: var(--stat-overdue);
+}
+
+.stats-card .stat-pending {
+    --kpi-accent: var(--stat-pending);
 }
 
 .stats-card .stat-total strong {
@@ -285,8 +312,13 @@ body {
     display: flex;
     align-items: end;
     flex-wrap: wrap;
-    gap: 16px;
-    padding: 18px 20px;
+    gap: 14px;
+    padding: 22px;
+    background:
+        radial-gradient(ellipse at 100% 0, rgba(211, 186, 145, 0.1), transparent 34%),
+        var(--surface);
+    border-radius: 15px;
+    animation: card-enter 480ms ease both;
 }
 
 .filter-group {
@@ -307,49 +339,59 @@ body {
 .filter-group input,
 .filter-group select {
     width: 100%;
-    min-height: 44px;
-    padding: 10px 12px;
+    min-height: 48px;
+    padding: 11px 14px;
     color: var(--ink);
     background: var(--control-bg);
     border: 1px solid var(--control-border);
-    border-radius: 6px;
+    border-radius: 9px;
     font: inherit;
+    transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
 }
 
 .filter-group input:focus,
 .filter-group select:focus {
-    outline: 3px solid rgba(160, 72, 48, 0.14);
+    outline: 0;
     border-color: var(--ambition);
+    box-shadow: 0 0 0 3px rgba(160, 72, 48, 0.16);
 }
 
 .btn-limpar {
-    min-height: 44px;
-    padding: 10px 18px;
+    min-height: 48px;
+    padding: 10px 20px;
     color: var(--brown-primary);
     background: var(--crema);
     border: 1px solid var(--latte);
-    border-radius: 6px;
+    border-radius: 9px;
     cursor: pointer;
     font: inherit;
     font-weight: 700;
+    transition: background 160ms ease, border-color 160ms ease, transform 160ms ease;
 }
 
 .btn-limpar:hover,
 .btn-limpar:focus-visible {
     background: #efe1c7;
+    transform: translateY(-1px);
 }
 
 .section h2 {
-    margin: 0 0 16px;
+    margin: 0 0 18px;
     color: var(--ink);
-    font-size: 18px;
+    font-size: 19px;
     line-height: 1.35;
+    letter-spacing: -0.02em;
+}
+
+.section {
+    border-radius: 15px;
 }
 
 .table-scroll {
     overflow-x: auto;
     border: 1px solid rgba(211, 186, 145, 0.72);
-    border-radius: 6px;
+    border-radius: 11px;
+    box-shadow: 0 4px 14px rgba(70, 51, 40, 0.035);
 }
 
 .training-total {
@@ -363,18 +405,21 @@ table {
 }
 
 th {
-    padding: 12px 14px;
+    padding: 14px 16px;
     color: #fff;
-    background: var(--brown-dark);
+    background: linear-gradient(110deg, #3F3A31, #51483b);
     font-size: 12px;
     font-weight: 700;
+    letter-spacing: 0.035em;
     white-space: nowrap;
 }
 
 td {
-    padding: 13px 14px;
+    padding: 14px 16px;
     border-bottom: 1px solid var(--table-border);
     font-size: 14px;
+    line-height: 1.45;
+    transition: background-color 140ms ease;
 }
 
 tbody tr:last-child td {
@@ -382,6 +427,14 @@ tbody tr:last-child td {
 }
 
 tbody tr:hover {
+    background: var(--table-row-hover);
+}
+
+tbody tr:nth-child(even) {
+    background: var(--table-row-alt);
+}
+
+tbody tr:nth-child(even):hover {
     background: var(--table-row-hover);
 }
 
@@ -540,6 +593,7 @@ tbody tr:hover {
     --page-bg: #1d1b18;
     --shadow: 0 12px 30px rgba(0, 0, 0, 0.24);
     --table-border: #413a31;
+    --table-row-alt: #24221e;
     --table-row-hover: #332e27;
     --control-bg: #211f1b;
     --control-border: #514638;
@@ -547,6 +601,10 @@ tbody tr:hover {
     --stat-good: #8bbb88;
     --stat-overdue: #f09a81;
     --stat-pending: #edc36a;
+    --profile-field-bg: #312d27;
+    --profile-field-border: #514638;
+    --kpi-bg: #302b25;
+    --kpi-border: #514638;
 }
 
 :root[data-theme="dark"] .card,
@@ -1046,6 +1104,18 @@ tbody tr:hover {
     object-position: left center;
 }
 
+.header-jde-logo {
+    display: block;
+    width: 54px;
+    height: 42px;
+    flex: 0 0 54px;
+    padding: 4px;
+    object-fit: contain;
+    background: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.32);
+    border-radius: 8px;
+}
+
 .hero {
     display: flex;
     min-height: 270px;
@@ -1310,14 +1380,15 @@ tbody tr:hover {
 
 .profile-card {
     position: relative;
-    padding: clamp(20px, 3vw, 32px);
+    min-height: 250px;
+    padding: clamp(24px, 4vw, 42px);
     overflow: hidden;
     background:
-        radial-gradient(ellipse at 100% 0, rgba(211, 186, 145, 0.19), transparent 34%),
-        var(--surface);
-    border: 1px solid rgba(211, 186, 145, 0.65);
-    border-radius: 16px;
-    box-shadow: 0 12px 30px rgba(70, 51, 40, 0.08);
+        radial-gradient(ellipse at 100% 0, rgba(211, 186, 145, 0.28), transparent 38%),
+        linear-gradient(118deg, #FCF9F4 0%, #F4EEE4 100%);
+    border: 1px solid rgba(211, 186, 145, 0.72);
+    border-radius: 20px;
+    box-shadow: 0 16px 38px rgba(70, 51, 40, 0.1);
     animation: card-enter 360ms ease both;
 }
 
@@ -1331,14 +1402,47 @@ tbody tr:hover {
     content: "";
 }
 
+.profile-card::after {
+    position: absolute;
+    top: -150px;
+    right: -100px;
+    width: 360px;
+    height: 360px;
+    border: 1px solid rgba(140, 116, 84, 0.16);
+    border-radius: 50%;
+    box-shadow: 0 0 0 28px rgba(140, 116, 84, 0.035), 0 0 0 58px rgba(140, 116, 84, 0.025);
+    content: "";
+    pointer-events: none;
+}
+
 .profile-card .info-grid {
-    gap: 24px 28px;
+    position: relative;
+    z-index: 1;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 170px), 1fr));
+    align-items: stretch;
+    gap: 16px;
+}
+
+@media (min-width: 1000px) {
+    .profile-card .info-grid {
+        grid-template-columns: minmax(0, 1.5fr) repeat(4, minmax(0, 1fr));
+    }
 }
 
 .profile-card .info-item:first-child > strong {
     color: var(--brown-primary);
-    font-size: clamp(20px, 2.4vw, 25px);
-    letter-spacing: -0.025em;
+    font-size: clamp(26px, 3vw, 36px);
+    line-height: 1.12;
+    letter-spacing: -0.04em;
+}
+
+.profile-card .info-item:not(:first-child) {
+    justify-content: center;
+    padding: 15px 16px;
+    background: var(--profile-field-bg);
+    border: 1px solid var(--profile-field-border);
+    border-radius: 12px;
+    box-shadow: 0 4px 14px rgba(70, 51, 40, 0.035);
 }
 
 .profile-card .training-count {
@@ -1355,8 +1459,8 @@ tbody tr:hover {
 .profile-card .info-item:last-child {
     align-self: start;
     padding: 12px 14px;
-    background: var(--crema);
-    border: 1px solid var(--line);
+    background: var(--profile-field-bg);
+    border-color: var(--profile-field-border);
     border-radius: 10px;
 }
 
@@ -1373,28 +1477,43 @@ tbody tr:hover {
 }
 
 .stats-card {
-    border-radius: 14px;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
     animation: card-enter 420ms ease both;
 }
 
 .stats-card .info-item {
-    transition: background-color 160ms ease, transform 160ms ease;
+    transition: background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
 }
 
 .stats-card .info-item:hover {
-    transform: translateY(-2px);
+    transform: translateY(-3px);
+    border-color: var(--kpi-accent, var(--line));
+    box-shadow: 0 12px 24px rgba(70, 51, 40, 0.1);
 }
 
 :root[data-theme="dark"] .profile-card {
     background:
-        radial-gradient(ellipse at 100% 0, rgba(140, 116, 84, 0.15), transparent 35%),
+        radial-gradient(ellipse at 100% 0, rgba(140, 116, 84, 0.22), transparent 38%),
         var(--surface);
     border-color: #514638;
 }
 
+:root[data-theme="dark"] .profile-card::after {
+    border-color: rgba(196, 167, 123, 0.18);
+    box-shadow: 0 0 0 28px rgba(196, 167, 123, 0.045), 0 0 0 58px rgba(196, 167, 123, 0.03);
+}
+
 :root[data-theme="dark"] .profile-card .info-item:last-child {
-    background: #352f27;
-    border-color: #514638;
+    background: var(--profile-field-bg);
+    border-color: var(--profile-field-border);
+}
+
+:root[data-theme="dark"] .header-jde-logo {
+    border-color: rgba(255, 255, 255, 0.55);
 }
 
 :root[data-theme="dark"] .header a {
@@ -1512,5 +1631,43 @@ tbody tr:hover {
     .footer-year {
         grid-column: 1 / -1;
         padding-top: 12px;
+    }
+
+    .profile-card {
+        min-height: 0;
+        padding: 22px 18px;
+        border-radius: 16px;
+    }
+
+    .profile-card::after {
+        top: -190px;
+        right: -190px;
+    }
+
+    .profile-card .info-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+    }
+
+    .profile-card .info-item:first-child {
+        grid-column: 1 / -1;
+    }
+
+    .profile-card .info-item:not(:first-child) {
+        padding: 13px;
+    }
+
+    .stats-card .info-grid > .info-item {
+        padding: 14px;
+        border-left: 1px solid var(--kpi-border);
+    }
+
+    .stats-card .info-item {
+        min-height: 92px;
+        padding: 14px;
+    }
+
+    .stats-card .info-item:first-child {
+        padding-left: 14px;
     }
 }
